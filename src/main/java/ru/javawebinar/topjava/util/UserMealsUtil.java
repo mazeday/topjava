@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.util;
 
+import com.sun.javafx.collections.MappingChange;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.model.UserMealWithExcess;
 
@@ -7,9 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class UserMealsUtil {
     public static void main(String[] args) {
@@ -33,25 +32,35 @@ public class UserMealsUtil {
         // TODO return filtered list with excess. Implement by cycles
 
         List<UserMealWithExcess> mealsShort = new ArrayList<UserMealWithExcess>();
+        Map<LocalDate, Integer> mapExcess = new HashMap<>();
+        //mea.getDateTime().toLocalDate()
+        LocalDate time;
+        Integer caloriesLocal = 0;
+        time = meals.get(0).getDateTime().toLocalDate();
+        for (int i=0; i < meals.size(); i++){
+            if (time.equals(meals.get(i).getDateTime().toLocalDate())) {
+                caloriesLocal+=meals.get(i).getCalories();
 
-        LocalDateTime time;
-
-        for (UserMeal meal : meals){
-            time = meal.getDateTime();
-            int caloriesExcess = 0;
-            for (UserMeal mea : meals) {
-                if (mea.getDateTime().toLocalDate().isEqual(time.toLocalDate())) {
-                    caloriesExcess += meal.getCalories();
-                    System.out.println(caloriesExcess);
-                }
+            }else{
+                mapExcess.put(time, caloriesLocal);
+                time = meals.get(i).getDateTime().toLocalDate();
+                caloriesLocal = 0;
+                caloriesLocal+=meals.get(i).getCalories();
+            }
+            if(i==meals.size()-1){
+                mapExcess.put(time, caloriesLocal);
             }
 
 
+        }
+        //System.out.println(mapExcess);
 
+
+        for (UserMeal meal : meals){
             if(meal.getDateTime().toLocalTime().isAfter(startTime) && meal.getDateTime().toLocalTime().isBefore( endTime) ){
                 //System.out.println(meal.getDateTime().getHour());
                 Boolean excess = false;
-                if (meal.getCalories()>caloriesPerDay){
+                if (mapExcess.get(meal.getDateTime().toLocalDate())>caloriesPerDay){
                     excess = true;
                 }
                 mealsShort.add(
