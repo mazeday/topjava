@@ -34,8 +34,18 @@ public class UserMealsUtil {
 
         List<UserMealWithExcess> mealsShort = new ArrayList<UserMealWithExcess>();
 
-        LocalDate time;
+        LocalDateTime time;
+
         for (UserMeal meal : meals){
+            time = meal.getDateTime();
+            int caloriesExcess = 0;
+            for (UserMeal mea : meals) {
+                if (mea.getDateTime().toLocalDate().isEqual(time.toLocalDate())) {
+                    caloriesExcess += meal.getCalories();
+                    System.out.println(caloriesExcess);
+                }
+            }
+
 
 
             if(meal.getDateTime().toLocalTime().isAfter(startTime) && meal.getDateTime().toLocalTime().isBefore( endTime) ){
