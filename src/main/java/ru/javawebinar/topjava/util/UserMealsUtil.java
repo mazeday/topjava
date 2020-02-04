@@ -33,11 +33,19 @@ public class UserMealsUtil {
 
         List<UserMealWithExcess> mealsShort = new ArrayList<UserMealWithExcess>();
         Map<LocalDate, Integer> mapExcess = new HashMap<>();
-        //mea.getDateTime().toLocalDate()
+
         LocalDate time;
-        Integer caloriesLocal = 0;
-        time = meals.get(0).getDateTime().toLocalDate();
+
         for (int i=0; i < meals.size(); i++){
+            time = meals.get(i).getDateTime().toLocalDate();
+
+            if (mapExcess.containsKey(time)){
+                mapExcess.put(time, mapExcess.get(time)+meals.get(i).getCalories());
+            } else  {
+                mapExcess.put(time, meals.get(i).getCalories());
+            }
+
+            /*
             if (time.equals(meals.get(i).getDateTime().toLocalDate())) {
                 caloriesLocal+=meals.get(i).getCalories();
 
@@ -50,7 +58,7 @@ public class UserMealsUtil {
             if(i==meals.size()-1){
                 mapExcess.put(time, caloriesLocal);
             }
-
+             */
 
         }
         //System.out.println(mapExcess);
